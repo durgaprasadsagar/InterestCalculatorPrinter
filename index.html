@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARJUN PRASAD CALCULATOR</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        input {
+            width: 100%;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: 'Arial', sans-serif;
+            transition: all 0.3s ease;
+            margin: 5px;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .add-btn {
+            background: linear-gradient(45deg, #007BFF, #00aaff);
+        }
+
+        .remove-btn {
+            background: linear-gradient(45deg, #f44336, #ff6f6f);
+        }
+
+        .calculate-btn, .print-btn {
+            background: linear-gradient(45deg, #4CAF50, #5cb85c);
+        }
+
+        button:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        #totalInterestDisplay, #totalAmountDisplay {
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h2>ARJUN PRASAD CALCULATOR</h2>
+
+    <table id="interestTable">
+        <thead>
+            <tr>
+                <th>అసలు</th>
+                <th>రూపాయికి (%)</th>
+                <th>ప్రారంభ తేదీ</th>
+                <th>చివరి తేదీ</th>
+                <th>రోజులు</th>
+                <th>వడ్డి</th>
+                <th>మొత్తం</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <tr id="row1">
+                <td><input type="number" id="amount1" value="100000"></td>
+                <td><input type="number" id="rate1" value="2"></td>
+                <td><input type="date" id="start1" value="2024-01-01"></td>
+                <td><input type="date" id="end1" value="2024-02-01"></td>
+                <td id="monthsDays1">0 నెలలు, 0 రోజులు</td>
+                <td id="interest1">0</td>
+                <td id="total1">0</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button class="add-btn" onclick="addRow()">Add Row</button>
+    <button class="remove-btn" onclick="removeLastRow()">Remove Last Row</button>
+
+    <div id="totalInterestDisplay">మొత్తం వడ్డి: 0</div>
+    <div id="totalAmountDisplay">మొత్తం(అసలు+వడ్డి): 0</div>
+
+    <button class="calculate-btn" onclick="calculateTotalInterest()">Calculate Total Interest</button>
+    <button class="calculate-btn" onclick="calculateTotalAmount()">Calculate Total Amount</button>
+    <button class="print-btn" onclick="printTable()">Print Table</button>
+
+    <script>
+        let rowCount = 1;
+
+        function monthsAndDaysDifference(startDate, endDate) {
+            let startYear = startDate.getFullYear();
+            let startMonth = startDate.getMonth();
+            let startDay = startDate.getDate();
+            let endYear = endDate.getFullYear();
+            let endMonth = endDate.getMonth();
+            let endDay = endDate.getDate();
+
+            let months = (endYear - startYear) * 12 + (endMonth - startMonth);
+
+            let remainingDays = endDay - startDay;
+            if (remainingDays < 0) {
+                months -= 1;
+                let lastMonthEnd = new Date(endYear, endMonth, 0);
+                remainingDays += lastMonthEnd.getDate();
+            }
+
+            return { months: months, remainingDays: remainingDays };
+        }
+
+        function calculateInterest(row) {
+            let amount = parseFloat(document.getElementById('amount' + row).value);
+            let rate = parseFloat(document.getElementById('rate' + row).value);
+            let startDate = new Date(document.getElementById('start' + row).value);
+            let endDate = new Date(document.getElementById('end' + row).value);
+            
+            let { months, remainingDays } = monthsAndDaysDifference(startDate, endDate);
+            document.getElementById('monthsDays' + row).innerText = `${months} నెలలు, ${remainingDays} రోజులు`;
+
+            let interest = (amount * rate * (months + remainingDays / 30)) / (100);
+            let total = amount + interest;
+
+            document.getElementById('interest' + row).innerText = interest.toFixed(2);
+            document.getElementById('total' + row).innerText = total.toFixed(2);
+        }
+
+        function addEventListeners(row) {
+            let amountInput = document.getElementById('amount' + row);
+            let rateInput = document.getElementById('rate' + row);
+            let startDateInput = document.getElementById('start' + row);
+            let endDateInput = document.getElementById('end' + row);
+            
+            amountInput.addEventListener('input', function() {
+                calculateInterest(row);
+            });
+
+            rateInput.addEventListener('input', function() {
+                calculateInterest(row);
+            });
+
+            startDateInput.addEventListener('change', function() {
+                calculateInterest(row);
+            });
+
+            endDateInput.addEventListener('change', function() {
+                calculateInterest(row);
+            });
+        }
+
+        function printTable() {
+            let inputs = document.querySelectorAll('input');
+            let inputValues = [];
+
+            inputs.forEach((input, index) => {
+                let value = input.value;
+                inputValues.push(value);
+                let td = input.parentElement;
+                td.innerHTML = value;
+            });
+
+            window.print();
+
+            inputs.forEach((input, index) => {
+                let td = input.parentElement;
+                td.innerHTML = '';
+                td.appendChild(input);
+                input.value = inputValues[index];
+            });
+        }
+
+        function addRow() {
+            rowCount++;
+            let newRow = document.createElement('tr');
+            newRow.id = 'row' + rowCount;
+
+            newRow.innerHTML = `
+                <td><input type="number" id="amount${rowCount}" value="100000"></td>
+                <td><input type="number" id="rate${rowCount}" value="2"></td>
+                <td><input type="date" id="start${rowCount}" value="2024-01-01"></td>
+                <td><input type="date" id="end${rowCount}" value="2024-02-01"></td>
+                <td id="monthsDays${rowCount}">0 నెలలు, 0 రోజులు</td>
+                <td id="interest${rowCount}">0</td>
+                <td id="total${rowCount}">0</td>
+            `;
+
+            document.getElementById('tableBody').appendChild(newRow);
+            addEventListeners(rowCount);
+            calculateInterest(rowCount);
+        }
+
+        function removeLastRow() {
+            if (rowCount > 1) {
+                document.getElementById('row' + rowCount).remove();
+                rowCount--;
+                calculateTotalInterest();
+                calculateTotalAmount();
+            } else {
+                alert('You cannot remove the last row!');
+            }
+        }
+
+        function calculateTotalInterest() {
+            let totalInterest = 0;
+
+            for (let i = 1; i <= rowCount; i++) {
+                let interest = parseFloat(document.getElementById('interest' + i).innerText);
+                totalInterest += isNaN(interest) ? 0 : interest;
+            }
+
+            document.getElementById('totalInterestDisplay').innerText = `మొత్తం వడ్డి: ${totalInterest.toFixed(2)}`;
+        }
+
+        function calculateTotalAmount() {
+            let totalAmount = 0;
+
+            for (let i = 1; i <= rowCount; i++) {
+                let total = parseFloat(document.getElementById('total' + i).innerText);
+                totalAmount += isNaN(total) ? 0 : total;
+            }
+
+            document.getElementById('totalAmountDisplay').innerText = `మొత్తం(అసలు+వడ్డి): ${totalAmount.toFixed(2)}`;
+        }
+
+        window.onload = function() {
+            addEventListeners(1);
+            calculateInterest(1);
+        }
+    </script>
+</body>
+</html>
