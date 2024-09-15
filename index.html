@@ -95,12 +95,10 @@
         }
 
         @media print {
-            /* Hide buttons, total display areas, and language selector */
-            .add-btn, .remove-btn, .calculate-btn, .print-btn, #totalInterestDisplay, #totalAmountDisplay, #languageSelector, .language-label {
+            .add-btn, .remove-btn, .calculate-btn, .print-btn, #languageSelector, .language-label {
                 display: none;
             }
             
-            /* Adjust table styles for printing if necessary */
             table {
                 box-shadow: none;
                 border: 1px solid #000;
@@ -108,6 +106,13 @@
             
             th, td {
                 border: 1px solid #000;
+            }
+
+            #totalInterestDisplay, #totalAmountDisplay {
+                display: block;
+                margin-top: 20px;
+                font-size: 18px;
+                font-weight: bold;
             }
         }
     </style>
@@ -118,6 +123,7 @@
     <div>
         <label class="language-label" for="languageSelector">Choose Language:</label>
         <select id="languageSelector" onchange="updateLanguage()">
+            <option value="">Select</option>
             <option value="en">English</option>
             <option value="te">Telugu</option>
             <option value="hi">Hindi</option>
@@ -155,9 +161,9 @@
     <div id="totalInterestDisplay">Total Interest: 0</div>
     <div id="totalAmountDisplay">Total (Principal + Interest): 0</div>
 
-    <button class="calculate-btn" onclick="calculateTotalInterest()">Calculate Total Interest</button>
-    <button class="calculate-btn" onclick="calculateTotalAmount()">Calculate Total Amount</button>
-    <button class="print-btn" onclick="printTable()">Print Table</button>
+    <button class="calculate-btn" onclick="calculateTotalInterest()">Total Interest</button>
+    <button class="calculate-btn" onclick="calculateTotalAmount()">Total Amount</button>
+    <button class="print-btn" onclick="printTable()">Print</button>
 
     <script>
         let rowCount = 1;
@@ -175,7 +181,7 @@
                 removeRow: "Remove Last Row",
                 totalInterest: "Total Interest",
                 totalAmount: "Total (Principal + Interest)",
-                printTable: "Print Table",
+                printTable: "Print",
                 monthsDays: "months, days"
             },
             te: {
@@ -186,11 +192,11 @@
                 daysHeader: "రోజులు",
                 interestHeader: "వడ్డి",
                 totalHeader: "మొత్తం",
-                addRow: "ఎదిరిన వరుసను జోడించండి",
+                addRow: "వరుసను జోడించండి",
                 removeRow: "చివరి వరుసను తీసేయండి",
                 totalInterest: "మొత్తం వడ్డి",
                 totalAmount: "మొత్తం (అసలు+వడ్డి)",
-                printTable: "తొలగించు పట్టిక",
+                printTable: "Print",
                 monthsDays: "నెలలు, రోజులు"
             },
             hi: {
@@ -205,13 +211,15 @@
                 removeRow: "अंतिम पंक्ति हटाएं",
                 totalInterest: "कुल ब्याज",
                 totalAmount: "कुल (प्रधान + ब्याज)",
-                printTable: "प्रिंट टेबल",
+                printTable: "Print",
                 monthsDays: "महीने, दिन"
             }
         };
 
         function updateLanguage() {
             const lang = document.getElementById('languageSelector').value;
+            if (!lang) return; // No language selected
+
             const texts = languageTexts[lang];
 
             document.getElementById('principalHeader').innerText = texts.principalHeader;
@@ -227,6 +235,10 @@
             document.getElementById('totalInterestDisplay').innerText = `${texts.totalInterest}: 0`;
             document.getElementById('totalAmountDisplay').innerText = `${texts.totalAmount}: 0`;
             document.querySelector('.print-btn').innerText = texts.printTable;
+        
+            for (let i = 1; i <= rowCount; i++) {
+                calculateInterest(i);
+            }
         }
 
         function monthsAndDaysDifference(startDate, endDate) {
@@ -256,6 +268,10 @@
             let endDate = new Date(document.getElementById('end' + row).value);
             
             let { months, remainingDays } = monthsAndDaysDifference(startDate, endDate);
+            
+            const lang = document.getElementById('languageSelector').value;
+            const monthsDaysText = languageTexts[lang].monthsDays;
+
             document.getElementById('monthsDays' + row).innerText = `${months} ${document.getElementById('languageSelector').value === 'en' ? 'months' : document.getElementById('languageSelector').value === 'te' ? 'నెలలు' : 'महीने'}, ${remainingDays} ${document.getElementById('languageSelector').value === 'en' ? 'days' : document.getElementById('languageSelector').value === 'te' ? 'రోజులు' : 'दिन'}`;
 
             let interest = (amount * rate * (months + remainingDays / 30)) / (100);
@@ -311,6 +327,7 @@
 
         function addRow() {
             rowCount++;
+            let tableBody = document.getElementById('tableBody');
             let newRow = document.createElement('tr');
             newRow.id = 'row' + rowCount;
 
