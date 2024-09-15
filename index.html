@@ -92,16 +92,25 @@
 <body>
     <h2>ARJUN PRASAD CALCULATOR</h2>
 
+    <div>
+        <label for="languageSelector">Select Language:</label>
+        <select id="languageSelector" onchange="updateLanguage()">
+            <option value="en">English</option>
+            <option value="te">Telugu</option>
+            <option value="hi">Hindi</option>
+        </select>
+    </div>
+
     <table id="interestTable">
         <thead>
             <tr>
-                <th>అసలు</th>
-                <th>రూపాయికి (%)</th>
-                <th>ప్రారంభ తేదీ</th>
-                <th>చివరి తేదీ</th>
-                <th>రోజులు</th>
-                <th>వడ్డి</th>
-                <th>మొత్తం</th>
+                <th id="principalHeader">Principal</th>
+                <th id="rateHeader">Rate (%)</th>
+                <th id="startDateHeader">Start Date</th>
+                <th id="endDateHeader">End Date</th>
+                <th id="daysHeader">Days</th>
+                <th id="interestHeader">Interest</th>
+                <th id="totalHeader">Total</th>
             </tr>
         </thead>
         <tbody id="tableBody">
@@ -110,7 +119,7 @@
                 <td><input type="number" id="rate1" value="2"></td>
                 <td><input type="date" id="start1" value="2024-01-01"></td>
                 <td><input type="date" id="end1" value="2024-02-01"></td>
-                <td id="monthsDays1">0 నెలలు, 0 రోజులు</td>
+                <td id="monthsDays1">0 months, 0 days</td>
                 <td id="interest1">0</td>
                 <td id="total1">0</td>
             </tr>
@@ -120,8 +129,8 @@
     <button class="add-btn" onclick="addRow()">Add Row</button>
     <button class="remove-btn" onclick="removeLastRow()">Remove Last Row</button>
 
-    <div id="totalInterestDisplay">మొత్తం వడ్డి: 0</div>
-    <div id="totalAmountDisplay">మొత్తం(అసలు+వడ్డి): 0</div>
+    <div id="totalInterestDisplay">Total Interest: 0</div>
+    <div id="totalAmountDisplay">Total (Principal + Interest): 0</div>
 
     <button class="calculate-btn" onclick="calculateTotalInterest()">Calculate Total Interest</button>
     <button class="calculate-btn" onclick="calculateTotalAmount()">Calculate Total Amount</button>
@@ -129,6 +138,73 @@
 
     <script>
         let rowCount = 1;
+
+        const languageTexts = {
+            en: {
+                principalHeader: "Principal",
+                rateHeader: "Rate (%)",
+                startDateHeader: "Start Date",
+                endDateHeader: "End Date",
+                daysHeader: "Days",
+                interestHeader: "Interest",
+                totalHeader: "Total",
+                addRow: "Add Row",
+                removeRow: "Remove Last Row",
+                totalInterest: "Total Interest",
+                totalAmount: "Total (Principal + Interest)",
+                printTable: "Print Table",
+                monthsDays: "months, days"
+            },
+            te: {
+                principalHeader: "అసలు",
+                rateHeader: "రూపాయికి (%)",
+                startDateHeader: "ప్రారంభ తేదీ",
+                endDateHeader: "చివరి తేదీ",
+                daysHeader: "రోజులు",
+                interestHeader: "వడ్డి",
+                totalHeader: "మొత్తం",
+                addRow: "ఎదిరిన వరుసను జోడించండి",
+                removeRow: "చివరి వరుసను తీసేయండి",
+                totalInterest: "మొత్తం వడ్డి",
+                totalAmount: "మొత్తం (అసలు+వడ్డి)",
+                printTable: "తొలగించు పట్టిక",
+                monthsDays: "నెలలు, రోజులు"
+            },
+            hi: {
+                principalHeader: "प्रधान",
+                rateHeader: "दर (%)",
+                startDateHeader: "प्रारंभ तिथि",
+                endDateHeader: "अंतिम तिथि",
+                daysHeader: "दिन",
+                interestHeader: "ब्याज",
+                totalHeader: "कुल",
+                addRow: "पंक्ति जोड़ें",
+                removeRow: "अंतिम पंक्ति हटाएं",
+                totalInterest: "कुल ब्याज",
+                totalAmount: "कुल (प्रधान + ब्याज)",
+                printTable: "प्रिंट टेबल",
+                monthsDays: "महीने, दिन"
+            }
+        };
+
+        function updateLanguage() {
+            const lang = document.getElementById('languageSelector').value;
+            const texts = languageTexts[lang];
+
+            document.getElementById('principalHeader').innerText = texts.principalHeader;
+            document.getElementById('rateHeader').innerText = texts.rateHeader;
+            document.getElementById('startDateHeader').innerText = texts.startDateHeader;
+            document.getElementById('endDateHeader').innerText = texts.endDateHeader;
+            document.getElementById('daysHeader').innerText = texts.daysHeader;
+            document.getElementById('interestHeader').innerText = texts.interestHeader;
+            document.getElementById('totalHeader').innerText = texts.totalHeader;
+
+            document.querySelector('.add-btn').innerText = texts.addRow;
+            document.querySelector('.remove-btn').innerText = texts.removeRow;
+            document.getElementById('totalInterestDisplay').innerText = `${texts.totalInterest}: 0`;
+            document.getElementById('totalAmountDisplay').innerText = `${texts.totalAmount}: 0`;
+            document.querySelector('.print-btn').innerText = texts.printTable;
+        }
 
         function monthsAndDaysDifference(startDate, endDate) {
             let startYear = startDate.getFullYear();
@@ -157,7 +233,7 @@
             let endDate = new Date(document.getElementById('end' + row).value);
             
             let { months, remainingDays } = monthsAndDaysDifference(startDate, endDate);
-            document.getElementById('monthsDays' + row).innerText = `${months} నెలలు, ${remainingDays} రోజులు`;
+            document.getElementById('monthsDays' + row).innerText = `${months} ${document.getElementById('languageSelector').value === 'en' ? 'months' : document.getElementById('languageSelector').value === 'te' ? 'నెలలు' : 'महीने'}, ${remainingDays} ${document.getElementById('languageSelector').value === 'en' ? 'days' : document.getElementById('languageSelector').value === 'te' ? 'రోజులు' : 'दिन'}`;
 
             let interest = (amount * rate * (months + remainingDays / 30)) / (100);
             let total = amount + interest;
@@ -220,7 +296,7 @@
                 <td><input type="number" id="rate${rowCount}" value="2"></td>
                 <td><input type="date" id="start${rowCount}" value="2024-01-01"></td>
                 <td><input type="date" id="end${rowCount}" value="2024-02-01"></td>
-                <td id="monthsDays${rowCount}">0 నెలలు, 0 రోజులు</td>
+                <td id="monthsDays${rowCount}">0 ${document.getElementById('languageSelector').value === 'en' ? 'months' : document.getElementById('languageSelector').value === 'te' ? 'నెలలు' : 'महीने'}, 0 ${document.getElementById('languageSelector').value === 'en' ? 'days' : document.getElementById('languageSelector').value === 'te' ? 'రోజులు' : 'दिन'}</td>
                 <td id="interest${rowCount}">0</td>
                 <td id="total${rowCount}">0</td>
             `;
@@ -249,7 +325,7 @@
                 totalInterest += isNaN(interest) ? 0 : interest;
             }
 
-            document.getElementById('totalInterestDisplay').innerText = `మొత్తం వడ్డి: ${totalInterest.toFixed(2)}`;
+            document.getElementById('totalInterestDisplay').innerText = `${document.getElementById('languageSelector').value === 'en' ? 'Total Interest' : document.getElementById('languageSelector').value === 'te' ? 'మొత్తం వడ్డి' : 'कुल ब्याज'}: ${totalInterest.toFixed(2)}`;
         }
 
         function calculateTotalAmount() {
@@ -260,12 +336,13 @@
                 totalAmount += isNaN(total) ? 0 : total;
             }
 
-            document.getElementById('totalAmountDisplay').innerText = `మొత్తం(అసలు+వడ్డి): ${totalAmount.toFixed(2)}`;
+            document.getElementById('totalAmountDisplay').innerText = `${document.getElementById('languageSelector').value === 'en' ? 'Total (Principal + Interest)' : document.getElementById('languageSelector').value === 'te' ? 'మొత్తం (అసలు+వడ్డి)' : 'कुल (प्रधान + ब्याज)'}: ${totalAmount.toFixed(2)}`;
         }
 
         window.onload = function() {
             addEventListeners(1);
             calculateInterest(1);
+            updateLanguage();
         }
     </script>
 </body>
