@@ -89,8 +89,8 @@
         }
 
         @media print {
-            /* Hide buttons and total display areas */
-            .add-btn, .remove-btn, .calculate-btn, .print-btn, #totalInterestDisplay, #totalAmountDisplay {
+            /* Hide buttons, total display areas, and language selector */
+            .add-btn, .remove-btn, .calculate-btn, .print-btn, #totalInterestDisplay, #totalAmountDisplay, #languageSelector {
                 display: none;
             }
             
@@ -136,7 +136,7 @@
                 <td><input type="number" id="rate1" value="2"></td>
                 <td><input type="date" id="start1" value="2024-01-01"></td>
                 <td><input type="date" id="end1" value="2024-02-01"></td>
-                <td id="monthsDays1">0 months, 0 days</td>
+                <td id="monthsDays1">0</td>
                 <td id="interest1">0</td>
                 <td id="total1">0</td>
             </tr>
@@ -240,7 +240,7 @@
                 remainingDays += lastMonthEnd.getDate();
             }
 
-            return { months: months, remainingDays: remainingDays };
+            return { months, remainingDays };
         }
 
         function calculateInterest(row) {
