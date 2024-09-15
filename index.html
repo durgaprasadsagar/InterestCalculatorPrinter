@@ -88,9 +88,15 @@
             font-size: 18px;
         }
 
+        .language-label {
+            display: block;
+            text-align: left;
+            margin: 20px 0;
+        }
+
         @media print {
             /* Hide buttons, total display areas, and language selector */
-            .add-btn, .remove-btn, .calculate-btn, .print-btn, #totalInterestDisplay, #totalAmountDisplay, #languageSelector {
+            .add-btn, .remove-btn, .calculate-btn, .print-btn, #totalInterestDisplay, #totalAmountDisplay, #languageSelector, .language-label {
                 display: none;
             }
             
@@ -110,7 +116,7 @@
     <h2>ARJUN PRASAD CALCULATOR</h2>
 
     <div>
-        <label for="languageSelector">Select Language:</label>
+        <label class="language-label" for="languageSelector">Choose Language:</label>
         <select id="languageSelector" onchange="updateLanguage()">
             <option value="en">English</option>
             <option value="te">Telugu</option>
