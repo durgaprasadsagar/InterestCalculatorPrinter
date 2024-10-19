@@ -3,126 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARJUN PRASAD CALCULATOR</title>
+    <title>Interest Calculator</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            padding: 20px;
-        }
-
-        h2 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        input {
-            width: 100%;
-            text-align: center;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 8px;
-            box-sizing: border-box;
-        }
-        
-        button {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-family: 'Arial', sans-serif;
-            transition: all 0.3s ease;
-            margin: 5px;
-            color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        button:hover {
-            transform: scale(1.05);
-        }
-        .whatsapp-btn {
-    background: linear-gradient(45deg, #25D366, #128C7E);
-        }
-
-        .add-btn {
-            background: linear-gradient(45deg, #007BFF, #00aaff);
-        }
-
-        .remove-btn {
-            background: linear-gradient(45deg, #f44336, #ff6f6f);
-        }
-
-        .calculate-btn, .print-btn {
-            background: linear-gradient(45deg, #4CAF50, #5cb85c);
-        }
-
-        button:active {
-            transform: scale(0.98);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        #totalInterestDisplay, #totalAmountDisplay {
-            font-weight: bold;
-            margin-top: 20px;
-            font-size: 18px;
-        }
-
-        .language-label {
-            display: block;
-            text-align: left;
-            margin: 20px 0;
-        }
-
-        @media print {
-            .add-btn, .remove-btn, .calculate-btn, .print-btn, #languageSelector, .language-label, .whatapp-btn {
-                display: none;
-            }
-            
-            table {
-                box-shadow: none;
-                border: 1px solid #000;
-            }
-            
-            th, td {
-                border: 1px solid #000;
-            }
-
-            #totalInterestDisplay, #totalAmountDisplay {
-                display: block;
-                margin-top: 20px;
-                font-size: 18px;
-                font-weight: bold;
-            }
+        .language-label, .whatsapp-btn {
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
-    <h2>ARJUN PRASAD CALCULATOR</h2>
+    <h1>Interest Calculator</h1>
 
+    <!-- Choose Language and Phone Number Input -->
     <div>
         <label class="language-label" for="languageSelector">Choose Language:</label>
         <select id="languageSelector" onchange="updateLanguage()">
@@ -131,271 +22,154 @@
             <option value="te">Telugu</option>
             <option value="hi">Hindi</option>
         </select>
+        
+        <!-- Phone number input -->
+        <label for="phoneInput">Phone Number:</label>
+        <input type="tel" id="phoneInput" placeholder="Enter phone number">
     </div>
 
-    <table id="interestTable">
+    <!-- Interest Table -->
+    <table border="1" id="interestTable">
         <thead>
             <tr>
-                <th id="principalHeader">Principal</th>
-                <th id="rateHeader">Rate (%)</th>
-                <th id="startDateHeader">Start Date</th>
-                <th id="endDateHeader">End Date</th>
-                <th id="daysHeader">Days</th>
-                <th id="interestHeader">Interest</th>
-                <th id="totalHeader">Total</th>
+                <th>Principal Amount</th>
+                <th>Rate (%)</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Interest</th>
+                <th>Total Amount</th>
             </tr>
         </thead>
-        <tbody id="tableBody">
+        <tbody id="interestBody">
             <tr id="row1">
-                <td><input type="number" id="amount1" value="100000"></td>
-                <td><input type="number" id="rate1" value="2"></td>
-                <td><input type="date" id="start1" value="2024-01-01"></td>
-                <td><input type="date" id="end1" value="2024-02-01"></td>
-                <td id="monthsDays1">0</td>
+                <td><input type="number" id="amount1" oninput="calculateInterest(1)"></td>
+                <td><input type="number" id="rate1" oninput="calculateInterest(1)"></td>
+                <td><input type="date" id="start1" onchange="calculateInterest(1)"></td>
+                <td><input type="date" id="end1" onchange="calculateInterest(1)"></td>
                 <td id="interest1">0</td>
                 <td id="total1">0</td>
             </tr>
         </tbody>
     </table>
 
-    <button class="add-btn" onclick="addRow()">Add Row</button>
-    <button class="remove-btn" onclick="removeLastRow()">Remove Last Row</button>
+    <button onclick="addRow()">Add Row</button>
+    <button onclick="removeRow()">Remove Row</button>
 
-    <div id="totalInterestDisplay">Total Interest: 0</div>
-    <div id="totalAmountDisplay">Total (Principal + Interest): 0</div>
+    <!-- Total Display -->
+    <p>Total Interest: <span id="totalInterestDisplay">0</span></p>
+    <p>Total Amount: <span id="totalAmountDisplay">0</span></p>
 
-    <button class="calculate-btn" onclick="calculateTotalInterest()">Total Interest</button>
-    <button class="calculate-btn" onclick="calculateTotalAmount()">Total Amount</button>
-    <button class="print-btn" onclick="printTable()">Print</button>
+    <!-- Share on WhatsApp Button -->
     <button class="whatsapp-btn" onclick="shareOnWhatsApp()">Share on WhatsApp</button>
+
+    <!-- Signature Block -->
+    <div id="signatureBlock">
+        <label for="signature">Enter Signature:</label>
+        <input type="text" id="signature" placeholder="Your Signature">
+    </div>
+
     <script>
         let rowCount = 1;
 
-        const languageTexts = {
-            en: {
-                principalHeader: "Principal",
-                rateHeader: "Rate (%)",
-                startDateHeader: "Start Date",
-                endDateHeader: "End Date",
-                daysHeader: "Days",
-                interestHeader: "Interest",
-                totalHeader: "Total",
-                addRow: "Add Row",
-                removeRow: "Remove Last Row",
-                totalInterest: "Total Interest",
-                totalAmount: "Total (Principal + Interest)",
-                printTable: "Print",
-                monthsDays: "months, days"
-            },
-            te: {
-                principalHeader: "అసలు",
-                rateHeader: "రూపాయికి (%)",
-                startDateHeader: "ప్రారంభ తేదీ",
-                endDateHeader: "చివరి తేదీ",
-                daysHeader: "రోజులు",
-                interestHeader: "వడ్డి",
-                totalHeader: "మొత్తం",
-                addRow: "వరుసను జోడించండి",
-                removeRow: "చివరి వరుసను తీసేయండి",
-                totalInterest: "మొత్తం వడ్డి",
-                totalAmount: "మొత్తం (అసలు+వడ్డి)",
-                printTable: "Print",
-                monthsDays: "నెలలు, రోజులు"
-            },
-            hi: {
-                principalHeader: "प्रधान",
-                rateHeader: "दर (%)",
-                startDateHeader: "प्रारंभ तिथि",
-                endDateHeader: "अंतिम तिथि",
-                daysHeader: "दिन",
-                interestHeader: "ब्याज",
-                totalHeader: "कुल",
-                addRow: "पंक्ति जोड़ें",
-                removeRow: "अंतिम पंक्ति हटाएं",
-                totalInterest: "कुल ब्याज",
-                totalAmount: "कुल (प्रधान + ब्याज)",
-                printTable: "Print",
-                monthsDays: "महीने, दिन"
-            }
-        };
-
-        function updateLanguage() {
-            const lang = document.getElementById('languageSelector').value;
-            if (!lang) return; // No language selected
-
-            const texts = languageTexts[lang];
-
-            document.getElementById('principalHeader').innerText = texts.principalHeader;
-            document.getElementById('rateHeader').innerText = texts.rateHeader;
-            document.getElementById('startDateHeader').innerText = texts.startDateHeader;
-            document.getElementById('endDateHeader').innerText = texts.endDateHeader;
-            document.getElementById('daysHeader').innerText = texts.daysHeader;
-            document.getElementById('interestHeader').innerText = texts.interestHeader;
-            document.getElementById('totalHeader').innerText = texts.totalHeader;
-
-            document.querySelector('.add-btn').innerText = texts.addRow;
-            document.querySelector('.remove-btn').innerText = texts.removeRow;
-            document.getElementById('totalInterestDisplay').innerText = `${texts.totalInterest}: 0`;
-            document.getElementById('totalAmountDisplay').innerText = `${texts.totalAmount}: 0`;
-            document.querySelector('.print-btn').innerText = texts.printTable;
-        
-            for (let i = 1; i <= rowCount; i++) {
-                calculateInterest(i);
-            }
-        }
-
-        function monthsAndDaysDifference(startDate, endDate) {
-            let startYear = startDate.getFullYear();
-            let startMonth = startDate.getMonth();
-            let startDay = startDate.getDate();
-            let endYear = endDate.getFullYear();
-            let endMonth = endDate.getMonth();
-            let endDay = endDate.getDate();
-
-            let months = (endYear - startYear) * 12 + (endMonth - startMonth);
-
-            let remainingDays = endDay - startDay;
-            if (remainingDays < 0) {
-                months -= 1;
-                let lastMonthEnd = new Date(endYear, endMonth, 0);
-                remainingDays += lastMonthEnd.getDate();
-            }
-
-            return { months, remainingDays };
-        }
-
+        // Function to calculate interest and total amount
         function calculateInterest(row) {
-            let amount = parseFloat(document.getElementById('amount' + row).value);
-            let rate = parseFloat(document.getElementById('rate' + row).value);
+            let principal = document.getElementById('amount' + row).value;
+            let rate = document.getElementById('rate' + row).value;
             let startDate = new Date(document.getElementById('start' + row).value);
             let endDate = new Date(document.getElementById('end' + row).value);
             
-            let { months, remainingDays } = monthsAndDaysDifference(startDate, endDate);
+            if (principal && rate && startDate && endDate) {
+                let timeDiff = Math.abs(endDate - startDate);
+                let daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+                let interest = (principal * rate * daysDiff) / (365 * 100);
+                document.getElementById('interest' + row).innerText = interest.toFixed(2);
+                
+                let total = parseFloat(principal) + interest;
+                document.getElementById('total' + row).innerText = total.toFixed(2);
+                
+                calculateTotal();
+            }
+        }
+
+        // Function to calculate the total interest and amount
+        function calculateTotal() {
+            let totalInterest = 0;
+            let totalAmount = 0;
             
-            const lang = document.getElementById('languageSelector').value;
-            const monthsDaysText = languageTexts[lang].monthsDays;
-
-            document.getElementById('monthsDays' + row).innerText = `${months} ${document.getElementById('languageSelector').value === 'en' ? 'months' : document.getElementById('languageSelector').value === 'te' ? 'నెలలు' : 'महीने'}, ${remainingDays} ${document.getElementById('languageSelector').value === 'en' ? 'days' : document.getElementById('languageSelector').value === 'te' ? 'రోజులు' : 'दिन'}`;
-
-            let interest = (amount * rate * (months + remainingDays / 30)) / (100);
-            let total = amount + interest;
-
-            document.getElementById('interest' + row).innerText = interest.toFixed(2);
-            document.getElementById('total' + row).innerText = total.toFixed(2);
-        }
-
-        function addEventListeners(row) {
-            let amountInput = document.getElementById('amount' + row);
-            let rateInput = document.getElementById('rate' + row);
-            let startDateInput = document.getElementById('start' + row);
-            let endDateInput = document.getElementById('end' + row);
+            for (let i = 1; i <= rowCount; i++) {
+                let interest = parseFloat(document.getElementById('interest' + i).innerText);
+                let total = parseFloat(document.getElementById('total' + i).innerText);
+                
+                totalInterest += interest;
+                totalAmount += total;
+            }
             
-            amountInput.addEventListener('input', function() {
-                calculateInterest(row);
-            });
-
-            rateInput.addEventListener('input', function() {
-                calculateInterest(row);
-            });
-
-            startDateInput.addEventListener('change', function() {
-                calculateInterest(row);
-            });
-
-            endDateInput.addEventListener('change', function() {
-                calculateInterest(row);
-            });
+            document.getElementById('totalInterestDisplay').innerText = totalInterest.toFixed(2);
+            document.getElementById('totalAmountDisplay').innerText = totalAmount.toFixed(2);
         }
 
-        function printTable() {
-            let inputs = document.querySelectorAll('input');
-            let inputValues = [];
-
-            inputs.forEach((input, index) => {
-                let value = input.value;
-                inputValues.push(value);
-                let td = input.parentElement;
-                td.innerHTML = value;
-            });
-
-            window.print();
-
-            inputs.forEach((input, index) => {
-                let td = input.parentElement;
-                td.innerHTML = '';
-                td.appendChild(input);
-                input.value = inputValues[index];
-            });
-        }
-
+        // Function to add a new row
         function addRow() {
             rowCount++;
-            let tableBody = document.getElementById('tableBody');
             let newRow = document.createElement('tr');
             newRow.id = 'row' + rowCount;
-
             newRow.innerHTML = `
-                <td><input type="number" id="amount${rowCount}" value="100000"></td>
-                <td><input type="number" id="rate${rowCount}" value="2"></td>
-                <td><input type="date" id="start${rowCount}" value="2024-01-01"></td>
-                <td><input type="date" id="end${rowCount}" value="2024-02-01"></td>
-                <td id="monthsDays${rowCount}">0 ${document.getElementById('languageSelector').value === 'en' ? 'months' : document.getElementById('languageSelector').value === 'te' ? 'నెలలు' : 'महीने'}, 0 ${document.getElementById('languageSelector').value === 'en' ? 'days' : document.getElementById('languageSelector').value === 'te' ? 'రోజులు' : 'दिन'}</td>
+                <td><input type="number" id="amount${rowCount}" oninput="calculateInterest(${rowCount})"></td>
+                <td><input type="number" id="rate${rowCount}" oninput="calculateInterest(${rowCount})"></td>
+                <td><input type="date" id="start${rowCount}" onchange="calculateInterest(${rowCount})"></td>
+                <td><input type="date" id="end${rowCount}" onchange="calculateInterest(${rowCount})"></td>
                 <td id="interest${rowCount}">0</td>
                 <td id="total${rowCount}">0</td>
             `;
-
-            document.getElementById('tableBody').appendChild(newRow);
-            addEventListeners(rowCount);
-            calculateInterest(rowCount);
+            document.getElementById('interestBody').appendChild(newRow);
         }
 
-        function removeLastRow() {
+        // Function to remove the last row
+        function removeRow() {
             if (rowCount > 1) {
                 document.getElementById('row' + rowCount).remove();
                 rowCount--;
-                calculateTotalInterest();
-                calculateTotalAmount();
-            } else {
-                alert('You cannot remove the last row!');
+                calculateTotal();
             }
         }
 
-        function calculateTotalInterest() {
-            let totalInterest = 0;
-
-            for (let i = 1; i <= rowCount; i++) {
-                let interest = parseFloat(document.getElementById('interest' + i).innerText);
-                totalInterest += isNaN(interest) ? 0 : interest;
-            }
-
-            document.getElementById('totalInterestDisplay').innerText = `${document.getElementById('languageSelector').value === 'en' ? 'Total Interest' : document.getElementById('languageSelector').value === 'te' ? 'మొత్తం వడ్డి' : 'कुल ब्याज'}: ${totalInterest.toFixed(2)}`;
-        }
-
-        function calculateTotalAmount() {
-            let totalAmount = 0;
-
-            for (let i = 1; i <= rowCount; i++) {
-                let total = parseFloat(document.getElementById('total' + i).innerText);
-                totalAmount += isNaN(total) ? 0 : total;
-            }
-
-            document.getElementById('totalAmountDisplay').innerText = `${document.getElementById('languageSelector').value === 'en' ? 'Total (Principal + Interest)' : document.getElementById('languageSelector').value === 'te' ? 'మొత్తం (అసలు+వడ్డి)' : 'कुल (प्रधान + ब्याज)'}: ${totalAmount.toFixed(2)}`;
-        }
+        // Function to share the details on WhatsApp
         function shareOnWhatsApp() {
-    let totalInterest = document.getElementById('totalInterestDisplay').innerText;
-    let totalAmount = document.getElementById('totalAmountDisplay').innerText;
+            let phoneNumber = document.getElementById('phoneInput').value.trim();
+            if (phoneNumber === '') {
+                alert('Please enter a phone number.');
+                return;
+            }
 
-    // WhatsApp API URL
-    let whatsappMessage = `Total Interest: ${totalInterest}\nTotal (Principal + Interest): ${totalAmount}`;
-    let whatsappUrl = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
+            let totalInterest = document.getElementById('totalInterestDisplay').innerText;
+            let totalAmount = document.getElementById('totalAmountDisplay').innerText;
 
-    // Open WhatsApp
-    window.open(whatsappUrl, '_blank');
+            // Collect details for each row
+            let message = '';
+            for (let i = 1; i <= rowCount; i++) {
+                let principal = document.getElementById('amount' + i).value;
+                let rate = document.getElementById('rate' + i).value;
+                let startDate = document.getElementById('start' + i).value;
+                let endDate = document.getElementById('end' + i).value;
+                let interest = document.getElementById('interest' + i).innerText;
+                let total = document.getElementById('total' + i).innerText;
+                
+                message += `Principal: ${principal}, Rate: ${rate}%, Start Date: ${startDate}, End Date: ${endDate}, Interest: ${interest}, Total: ${total}\n`;
+            }
+
+            message += `\nTotal Interest: ${totalInterest}\nTotal Amount: ${totalAmount}`;
+
+            // WhatsApp API URL
+            let whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+            // Open WhatsApp with the details
+            window.open(whatsappUrl, '_blank');
         }
-        window.onload = function() {
-            addEventListeners(1);
-            calculateInterest(1);
-            updateLanguage();
+
+        // Placeholder for language update function
+        function updateLanguage() {
+            // Code for changing language content
         }
     </script>
 </body>
