@@ -3,173 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interest Calculator</title>
+    <title>Financial Details Form</title>
     <style>
-        .language-label, .whatsapp-btn {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: block;
+            color: #2c3e50;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+
+        .language-label {
+            display: inline-block;
             margin-right: 10px;
         }
+
+        .phone-label {
+            margin-left: 20px;
+            display: inline-block;
+        }
+
+        #phoneInput {
+            display: inline-block;
+            width: 200px;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .whatsapp-btn {
+            background-color: #25d366;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #1ebe57;
+        }
+
+        #languageSelector, #phoneInput {
+            margin-bottom: 20px;
+        }
+
+        #totalInterestDisplay, #totalAmountDisplay {
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
-    <h1>Interest Calculator</h1>
+    <div class="container">
+        <h1>Financial Details</h1>
 
-    <!-- Choose Language and Phone Number Input -->
-    <div>
-        <label class="language-label" for="languageSelector">Choose Language:</label>
-        <select id="languageSelector" onchange="updateLanguage()">
-            <option value="">Select</option>
-            <option value="en">English</option>
-            <option value="te">Telugu</option>
-            <option value="hi">Hindi</option>
-        </select>
-        
-        <!-- Phone number input -->
-        <label for="phoneInput">Phone Number:</label>
-        <input type="tel" id="phoneInput" placeholder="Enter phone number">
-    </div>
+        <!-- Choose Language and Phone Number Section -->
+        <div class="form-group">
+            <label class="language-label" for="languageSelector">Choose Language:</label>
+            <select id="languageSelector">
+                <option value="">Select</option>
+                <option value="en">English</option>
+                <option value="te">Telugu</option>
+                <option value="hi">Hindi</option>
+            </select>
 
-    <!-- Interest Table -->
-    <table border="1" id="interestTable">
-        <thead>
-            <tr>
-                <th>Principal Amount</th>
-                <th>Rate (%)</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Interest</th>
-                <th>Total Amount</th>
-            </tr>
-        </thead>
-        <tbody id="interestBody">
-            <tr id="row1">
-                <td><input type="number" id="amount1" oninput="calculateInterest(1)"></td>
-                <td><input type="number" id="rate1" oninput="calculateInterest(1)"></td>
-                <td><input type="date" id="start1" onchange="calculateInterest(1)"></td>
-                <td><input type="date" id="end1" onchange="calculateInterest(1)"></td>
-                <td id="interest1">0</td>
-                <td id="total1">0</td>
-            </tr>
-        </tbody>
-    </table>
+            <label class="phone-label" for="phoneInput">Phone Number:</label>
+            <input type="tel" id="phoneInput" placeholder="Enter phone number">
+        </div>
 
-    <button onclick="addRow()">Add Row</button>
-    <button onclick="removeRow()">Remove Row</button>
+        <!-- Table for Financial Details -->
+        <table id="financialTable">
+            <thead>
+                <tr>
+                    <th>Principal</th>
+                    <th>Rate (%)</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Days</th>
+                    <th>Interest</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="number" id="amount1" value="10000"></td>
+                    <td><input type="number" id="rate1" value="5"></td>
+                    <td><input type="date" id="start1" value="2024-10-01"></td>
+                    <td><input type="date" id="end1" value="2024-10-31"></td>
+                    <td id="monthsDays1">30</td>
+                    <td id="interest1">500</td>
+                    <td id="total1">10500</td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
 
-    <!-- Total Display -->
-    <p>Total Interest: <span id="totalInterestDisplay">0</span></p>
-    <p>Total Amount: <span id="totalAmountDisplay">0</span></p>
+        <!-- Total Interest and Total Amount Display -->
+        <div>
+            <p id="totalInterestDisplay">Total Interest: ₹500</p>
+            <p id="totalAmountDisplay">Total Amount: ₹10500</p>
+        </div>
 
-    <!-- Share on WhatsApp Button -->
-    <button class="whatsapp-btn" onclick="shareOnWhatsApp()">Share on WhatsApp</button>
-
-    <!-- Signature Block -->
-    <div id="signatureBlock">
-        <label for="signature">Enter Signature:</label>
-        <input type="text" id="signature" placeholder="Your Signature">
+        <!-- Share on WhatsApp Button -->
+        <button class="whatsapp-btn" onclick="shareOnWhatsApp()">Share on WhatsApp</button>
     </div>
 
     <script>
-        let rowCount = 1;
-
-        // Function to calculate interest and total amount
-        function calculateInterest(row) {
-            let principal = document.getElementById('amount' + row).value;
-            let rate = document.getElementById('rate' + row).value;
-            let startDate = new Date(document.getElementById('start' + row).value);
-            let endDate = new Date(document.getElementById('end' + row).value);
-            
-            if (principal && rate && startDate && endDate) {
-                let timeDiff = Math.abs(endDate - startDate);
-                let daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-
-                let interest = (principal * rate * daysDiff) / (365 * 100);
-                document.getElementById('interest' + row).innerText = interest.toFixed(2);
-                
-                let total = parseFloat(principal) + interest;
-                document.getElementById('total' + row).innerText = total.toFixed(2);
-                
-                calculateTotal();
-            }
-        }
-
-        // Function to calculate the total interest and amount
-        function calculateTotal() {
-            let totalInterest = 0;
-            let totalAmount = 0;
-            
-            for (let i = 1; i <= rowCount; i++) {
-                let interest = parseFloat(document.getElementById('interest' + i).innerText);
-                let total = parseFloat(document.getElementById('total' + i).innerText);
-                
-                totalInterest += interest;
-                totalAmount += total;
-            }
-            
-            document.getElementById('totalInterestDisplay').innerText = totalInterest.toFixed(2);
-            document.getElementById('totalAmountDisplay').innerText = totalAmount.toFixed(2);
-        }
-
-        // Function to add a new row
-        function addRow() {
-            rowCount++;
-            let newRow = document.createElement('tr');
-            newRow.id = 'row' + rowCount;
-            newRow.innerHTML = `
-                <td><input type="number" id="amount${rowCount}" oninput="calculateInterest(${rowCount})"></td>
-                <td><input type="number" id="rate${rowCount}" oninput="calculateInterest(${rowCount})"></td>
-                <td><input type="date" id="start${rowCount}" onchange="calculateInterest(${rowCount})"></td>
-                <td><input type="date" id="end${rowCount}" onchange="calculateInterest(${rowCount})"></td>
-                <td id="interest${rowCount}">0</td>
-                <td id="total${rowCount}">0</td>
-            `;
-            document.getElementById('interestBody').appendChild(newRow);
-        }
-
-        // Function to remove the last row
-        function removeRow() {
-            if (rowCount > 1) {
-                document.getElementById('row' + rowCount).remove();
-                rowCount--;
-                calculateTotal();
-            }
-        }
+        let rowCount = 1; // Number of rows in the table
 
         // Function to share the details on WhatsApp
         function shareOnWhatsApp() {
-            let phoneNumber = document.getElementById('phoneInput').value.trim();
-            if (phoneNumber === '') {
-                alert('Please enter a phone number.');
-                return;
-            }
+            let phoneNumber = document.getElementById('phoneInput').value;
 
+            // Get the total interest and total amount
             let totalInterest = document.getElementById('totalInterestDisplay').innerText;
             let totalAmount = document.getElementById('totalAmountDisplay').innerText;
 
-            // Collect details for each row
+            // Prepare the message for each row
             let message = '';
+
             for (let i = 1; i <= rowCount; i++) {
                 let principal = document.getElementById('amount' + i).value;
                 let rate = document.getElementById('rate' + i).value;
                 let startDate = document.getElementById('start' + i).value;
                 let endDate = document.getElementById('end' + i).value;
+                let days = document.getElementById('monthsDays' + i).innerText;
                 let interest = document.getElementById('interest' + i).innerText;
                 let total = document.getElementById('total' + i).innerText;
-                
-                message += `Principal: ${principal}, Rate: ${rate}%, Start Date: ${startDate}, End Date: ${endDate}, Interest: ${interest}, Total: ${total}\n`;
+
+                message += `Principal: ₹${principal}\nRate: ${rate}%\nStart Date: ${startDate}\nEnd Date: ${endDate}\nDays: ${days}\nInterest: ₹${interest}\nTotal: ₹${total}\n\n`;
             }
 
-            message += `\nTotal Interest: ${totalInterest}\nTotal Amount: ${totalAmount}`;
+            message += `${totalInterest}\n${totalAmount}`;
 
             // WhatsApp API URL
             let whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
-            // Open WhatsApp with the details
+            // Open WhatsApp with the message
             window.open(whatsappUrl, '_blank');
-        }
-
-        // Placeholder for language update function
-        function updateLanguage() {
-            // Code for changing language content
         }
     </script>
 </body>
