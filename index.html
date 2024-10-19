@@ -47,7 +47,7 @@
             padding: 8px;
             box-sizing: border-box;
         }
-
+        
         button {
             padding: 12px 20px;
             border: none;
@@ -63,6 +63,9 @@
 
         button:hover {
             transform: scale(1.05);
+        }
+        .whatsapp-btn {
+    background: linear-gradient(45deg, #25D366, #128C7E);
         }
 
         .add-btn {
@@ -95,7 +98,7 @@
         }
 
         @media print {
-            .add-btn, .remove-btn, .calculate-btn, .print-btn, #languageSelector, .language-label {
+            .add-btn, .remove-btn, .calculate-btn, .print-btn, #languageSelector, .language-label, .whatapp-btn {
                 display: none;
             }
             
@@ -164,7 +167,7 @@
     <button class="calculate-btn" onclick="calculateTotalInterest()">Total Interest</button>
     <button class="calculate-btn" onclick="calculateTotalAmount()">Total Amount</button>
     <button class="print-btn" onclick="printTable()">Print</button>
-
+    <button class="whatsapp-btn" onclick="shareOnWhatsApp()">Share on WhatsApp</button>
     <script>
         let rowCount = 1;
 
@@ -378,7 +381,17 @@
 
             document.getElementById('totalAmountDisplay').innerText = `${document.getElementById('languageSelector').value === 'en' ? 'Total (Principal + Interest)' : document.getElementById('languageSelector').value === 'te' ? 'మొత్తం (అసలు+వడ్డి)' : 'कुल (प्रधान + ब्याज)'}: ${totalAmount.toFixed(2)}`;
         }
+        function shareOnWhatsApp() {
+    let totalInterest = document.getElementById('totalInterestDisplay').innerText;
+    let totalAmount = document.getElementById('totalAmountDisplay').innerText;
 
+    // WhatsApp API URL
+    let whatsappMessage = `Total Interest: ${totalInterest}\nTotal (Principal + Interest): ${totalAmount}`;
+    let whatsappUrl = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
+
+    // Open WhatsApp
+    window.open(whatsappUrl, '_blank');
+        }
         window.onload = function() {
             addEventListeners(1);
             calculateInterest(1);
